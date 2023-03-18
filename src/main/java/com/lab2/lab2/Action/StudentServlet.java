@@ -1,22 +1,17 @@
 package com.lab2.lab2.Action;
 import java.io.*;
-import java.rmi.AccessException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import com.alibaba.fastjson.JSON;
-import com.lab2.lab2.Dao.Impl.MajorDaoImpl;
 import com.lab2.lab2.Dao.Impl.StudentDaoImpl;
-import com.lab2.lab2.Dao.MajorDao;
 import com.lab2.lab2.Dao.StudentDao;
-import com.lab2.lab2.Entity.Major;
 import com.lab2.lab2.Entity.Student;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-
-import static java.lang.Integer.valueOf;
 
 @WebServlet("/student-servlet")
 public class StudentServlet extends HttpServlet {
@@ -45,7 +40,8 @@ public class StudentServlet extends HttpServlet {
                     throw new RuntimeException(e);
                 }
             } else {
-                out.print("已经存在该学生的学号！");
+                Map<String, Object> result = new HashMap<>();
+                result.put("错误！","学号已存在！");
             }
         }
     }

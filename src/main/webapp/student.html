@@ -11,9 +11,6 @@
     *{
         color:whitesmoke;
     }
-    #Mname{
-       background-color: #222d5d;
-    }
     .head {
         background-color: #9fb9ee;
     }
@@ -29,7 +26,7 @@
         border-radius: 30px;
         text-align: center;
         padding:20px 30px;
-        background-color: #222d5d;
+        background-color: peru;
     }
     .data,table{
        margin:auto;
@@ -40,15 +37,20 @@
         border-radius: 30px;
         text-align: center;
         padding:20px 30px;
-        background-color: #222d5d;
+        background-color:#222d5d ;
     }
-    .data p input,button{
+    .data p input,button,#Mname{
         color: #222d5d;
         background-color: #cfd3e4;
         height: 20px;
         text-align: left;
         border: 1px;
         border-radius: 6px;
+    }
+    #Mname{
+        background-color: peru;
+        border:1px solid white;
+        color: white;
     }
 </style>
 <body>
@@ -68,7 +70,7 @@
     </div>
     <div class="data">
         <h2>是否要添加信息？</h2>
-        <p>学号（Identity）&nbsp<input type="text" name="sid" placeholder="student's id"></p>
+        <p id="sid">学号（Identity）&nbsp<input type="text" name="sid" placeholder="student's id"><span id="check"></span></p>
         <p>姓名（Name）&nbsp<input type="text" name="sname" placeholder="student's name"></p>
         <p><input type="radio" name="gender" checked value="m">男（Male）&nbsp<input type="radio" name="gender" value="f">女（Female）</p>
         <p>年龄（Age）&nbsp<input type="number" name="age" value=0></p>
@@ -81,11 +83,13 @@
         integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
         referrerpolicy="no-referrer" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 <script>
+
     var select="<p>专业（Major）<select id=\"Mname\" name=\"mname\"><option value='null'>-请选择专业-</option>";
     var defaultDate = document.querySelectorAll('.day');
     for (var i = 0; i<defaultDate.length; i++) {
         defaultDate[i].valueAsDate = new Date();
     }
+    var studentID=[];
     $(document).ready(function init() {
         $.ajax({
             url: '/student-servlet?',
@@ -95,6 +99,7 @@
             success: function (data) {
                 student_number=data.length;
                 for (let i = 0; i < data.length; i++) {
+                    studentID.push(data[i].sid);
                     var result;
                     var gender;
                     if(data[i].gender==='f') gender='女';
@@ -119,6 +124,16 @@
             }
         })
     })
+    document.getElementById("sid").addEventListener("keyup", check);
+    function check(){
+            let Sid =$('input[name="sid"]').val();
+            for(let i=0;i<studentID.length;i++){
+                if(studentID[i]===Sid){
+                    alert("学号已存在");
+                    $("#check").innerHTML="学号已存在";
+                }
+            }
+    }
     document.getElementById("change").addEventListener("click", add);
     function add(){
         let Sid = $('input[name="sid"]').val();
@@ -148,6 +163,9 @@
             datatype: "json",
             success: function (data, status) {
                 alert(status+data);
+            },
+            error: function(data,status){
+                alert("status:"+status+"   添加失败！学号已存在！");
             },
             type: "get",
             url: '/student-servlet?action=add'+"&sid="+Sid+"&sname="+Sname+"&gender="+

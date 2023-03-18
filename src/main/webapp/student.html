@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    body{
+        background-color: #9fb9ee;
+    }
+    *{
+        color:whitesmoke;
+    }
+    #Mname{
+       background-color: #222d5d;
+    }
+    .head {
+        background-color: #9fb9ee;
+    }
+    .head th{
+        color: #222d5d;
+    }
+    .whole{
+        float:right;
+        width:1150px;
+    }
+    .data{
+        float:left;
+        border-radius: 30px;
+        text-align: center;
+        padding:20px 30px;
+        background-color: #222d5d;
+    }
+    .data,table{
+       margin:auto;
+        border:1px solid #9fb9ee;
+    }
+    .database{
+        float:left;
+        border-radius: 30px;
+        text-align: center;
+        padding:20px 30px;
+        background-color: #222d5d;
+    }
+    .data p input,button{
+        color: #222d5d;
+        background-color: #cfd3e4;
+        height: 20px;
+        text-align: left;
+        border: 1px;
+        border-radius: 6px;
+    }
+</style>
+<body>
+<div class="whole">
+    <div class="database" style="text-align: center">
+        <h1>DataBase System</h1>
+        <table id="table" border="1">
+            <tr class="head">
+                <th>ID</th>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Age</th>
+                <th>Birthday</th>
+                <th>MajorId</th>
+            </tr>
+        </table>
+    </div>
+    <div class="data">
+        <h2>是否要添加信息？</h2>
+        <p>学号（Identity）&nbsp<input type="text" name="sid" placeholder="student's id"></p>
+        <p>姓名（Name）&nbsp<input type="text" name="sname" placeholder="student's name"></p>
+        <p><input type="radio" name="gender" checked value="m">男（Male）&nbsp<input type="radio" name="gender" value="f">女（Female）</p>
+        <p>年龄（Age）&nbsp<input type="number" name="age" value=0></p>
+        <p>生日（birthday）&nbsp<input type="date" name="birthday" class="day"></p>
+        <p id="mname"></p>
+        <p><button type="submit" id="change">添加（Add)</button></p>
+    </div>
+</div>
+<script crossorigin="anonymous"
+        integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
+        referrerpolicy="no-referrer" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script>
+    var select="<p>专业（Major）<select id=\"Mname\" name=\"mname\"><option value='null'>-请选择专业-</option>";
+    var defaultDate = document.querySelectorAll('.day');
+    for (var i = 0; i<defaultDate.length; i++) {
+        defaultDate[i].valueAsDate = new Date();
+    }
+    $(document).ready(function init() {
+        $.ajax({
+            url: '/student-servlet?',
+            type: "get",
+            datatype: "json",
+            data:{action: "init"},
+            success: function (data) {
+                student_number=data.length;
+                for (let i = 0; i < data.length; i++) {
+                    var result;
+                    var gender;
+                    if(data[i].gender==='f') gender='女';
+                    else if(data[i].gender==='m')gender='男';
+                    result = "<tr><td>" + data[i].sid + "</td><td>" + data[i].sname +
+                        "</td><td>" + gender + "</td><td>" + data[i].age +
+                        "</td><td>" + data[i].birthday + "</td><td>" + data[i].mid + "</td></tr>";
+                    $("#table").append(result);
+                }
+            }
+        })
+        $.ajax({
+            url:'/major-servlet',
+            type:"get",
+            datatype:"json",
+            success: function(data){
+                for(let i=0;i<data.length;i++){
+                    select +="<option value='"+data[i].mid+"'>"+data[i].mname+"</option>";
+                }
+                select+="</select></p>";
+                $("#mname").append(select);
+            }
+        })
+    })
+    document.getElementById("change").addEventListener("click", add);
+    function add(){
+        let Sid = $('input[name="sid"]').val();
+        let Sname=$('input[name="sname"]').val();
+        let Gender=$('input[name="gender"]:checked').val();
+        let Age=$('input[name="age"]').val();
+        let Birthday=$("input[name='birthday']").val();
+        let Mid=$("select[name='mname']").val();
+        if(Sid===""){
+            alert("请填入学号！");
+            return;
+        }
+        if(Sname===""){
+            alert("请填入姓名！");
+            return;
+        }
+        if(Age===0){
+            alert("请输入年龄！");
+            return;
+        }
+        if(Mid==='null'){
+            alert("请填入专业！");
+            return;
+        }
+        $.ajax({
+            data: {},
+            datatype: "json",
+            success: function (data, status) {
+                alert(status+data);
+            },
+            type: "get",
+            url: '/student-servlet?action=add'+"&sid="+Sid+"&sname="+Sname+"&gender="+
+                Gender+"&age="+Age+"&birthday="+Birthday+"&mid="+Mid
+        })
+    }
+</script>
+</body>
+</html>

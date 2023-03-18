@@ -44,6 +44,12 @@ public class StudentServlet extends HttpServlet {
                 result.put("错误！","学号已存在！");
             }
         }
+        else if("append".equals(action)){
+            String sid = request.getParameter("sid");
+            StudentDao studentdao=new StudentDaoImpl();
+            Student student=studentdao.getById(sid);
+            out.print(JSON.toJSONString(student));
+        }
     }
     protected void doPost(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException {
         doGet(request,response);

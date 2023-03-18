@@ -19,7 +19,7 @@
     }
     .whole{
         float:right;
-        width:1250px;
+        width:1180px;
     }
     .data{
         float:left;
@@ -61,12 +61,12 @@
         <table id="table" border="1">
             <h1>学生信息(DATA BASE)</h1>
             <tr class="head">
-                <th>&nbsp&nbsp&nbspID&nbsp&nbsp&nbsp</th>
-                <th>&nbsp&nbspName&nbsp&nbsp</th>
-                <th>&nbspGender&nbsp</th>
-                <th>&nbspAge&nbsp</th>
-                <th>&nbspBirthday&nbsp</th>
-                <th>&nbspMajorId&nbsp</th>
+                <th>学号</th>
+                <th>姓名</th>
+                <th>性别</th>
+                <th>年龄</th>
+                <th>生日</th>
+                <th>专业</th>
             </tr>
         </table>
     </div>
@@ -92,9 +92,23 @@
         defaultDate[i].valueAsDate = new Date();
     }
     var studentID=[];
+    var major_name={};
     $(document).ready(function init() {
         $.ajax({
-            url: '/student-servlet?',
+            url:'/major-servlet',
+            type:"get",
+            datatype:"json",
+            success: function(data){
+                for(let i=0;i<data.length;i++){
+                    major_name[data[i].mid]=data[i].mname;
+                    select +="<option value='"+data[i].mid+"'>"+data[i].mname+"</option>";
+                }
+                select+="</select></p>";
+                $("#mname").append(select);
+            }
+        })
+        $.ajax({
+            url: '/student-servlet',
             type: "get",
             datatype: "json",
             data:{action: "init"},
@@ -108,32 +122,21 @@
                     else if(data[i].gender==='m')gender='男';
                     result = "<tr><td>" + data[i].sid + "</td><td>" + data[i].sname +
                         "</td><td>" + gender + "</td><td>" + data[i].age +
-                        "</td><td>" + data[i].birthday + "</td><td>" + data[i].mid + "</td></tr>";
+                        "</td><td>" + data[i].birthday + "</td><td>" + major_name[data[i].mid] + "</td></tr>";
                     $("#table").append(result);
                 }
-            }
-        })
-        $.ajax({
-            url:'/major-servlet',
-            type:"get",
-            datatype:"json",
-            success: function(data){
-                for(let i=0;i<data.length;i++){
-                    select +="<option value='"+data[i].mid+"'>"+data[i].mname+"</option>";
-                }
-                select+="</select></p>";
-                $("#mname").append(select);
             }
         })
     })
     document.getElementById("sid").addEventListener("keyup", check);
     function check(){
-            $("#check").text("");
+            var label=$("#check");
+            label.text("");
             let check=$('input[name="sid"]');
             let Sid =check.val();
             for(let i=0;i<studentID.length;i++){
                 if(studentID[i]===Sid){
-                    $("#check").text("学号已存在");
+                    label.text("学号已存在");
                 }
             }
     }
@@ -153,7 +156,7 @@
             alert("请填入姓名！");
             return;
         }
-        if(Age===0){
+        if(Age==0){
             alert("请输入年龄！");
             return;
         }
@@ -162,17 +165,20 @@
             return;
         }
         $.ajax({
-            data: {},
             datatype: "json",
-            success: function (data, status) {
-                alert(status+data);
-            },
-            error: function(data,status){
-                alert("status:"+status+"   添加失败！学号已存在！");
-            },
             type: "get",
-            url: '/student-servlet?action=add'+"&sid="+Sid+"&sname="+Sname+"&gender="+
-                Gender+"&age="+Age+"&birthday="+Birthday+"&mid="+Mid
+            url:'/student-servlet',
+            data:{
+                action: "add",
+                sid: Sid,
+                sname: Sname,
+                gender: Gender,
+                age: Age,
+                birthday: Birthday,
+                mid: Mid
+            }
+            // url: '/student-servlet?action=add'+"&sid="+Sid+"&sname="+Sname+"&gender="+
+            //     Gender+"&age="+Age+"&birthday="+Birthday+"&mid="+Mid
         })
     }
 </script>

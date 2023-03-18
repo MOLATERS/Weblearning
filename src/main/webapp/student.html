@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Lab2</title>
 </head>
 <style>
     body{
@@ -19,18 +19,20 @@
     }
     .whole{
         float:right;
-        width:1150px;
+        width:1250px;
     }
     .data{
         float:left;
         border-radius: 30px;
         text-align: center;
         padding:20px 30px;
-        background-color: peru;
+        background-color: #883a1e;
+        border:15px solid #9fb9ee;
     }
-    .data,table{
+    table{
        margin:auto;
         border:1px solid #9fb9ee;
+        border-radius: 5px;
     }
     .database{
         float:left;
@@ -38,17 +40,17 @@
         text-align: center;
         padding:20px 30px;
         background-color:#222d5d ;
+        border:15px solid #9fb9ee;
     }
     .data p input,button,#Mname{
         color: #222d5d;
         background-color: #cfd3e4;
         height: 20px;
-        text-align: left;
         border: 1px;
         border-radius: 6px;
     }
     #Mname{
-        background-color: peru;
+        background-color: #883a1e;
         border:1px solid white;
         color: white;
     }
@@ -56,25 +58,25 @@
 <body>
 <div class="whole">
     <div class="database" style="text-align: center">
-        <h1>DataBase System</h1>
         <table id="table" border="1">
+            <h1>学生信息(DATA BASE)</h1>
             <tr class="head">
-                <th>ID</th>
-                <th>Name</th>
-                <th>Gender</th>
-                <th>Age</th>
-                <th>Birthday</th>
-                <th>MajorId</th>
+                <th>&nbsp&nbsp&nbspID&nbsp&nbsp&nbsp</th>
+                <th>&nbsp&nbspName&nbsp&nbsp</th>
+                <th>&nbspGender&nbsp</th>
+                <th>&nbspAge&nbsp</th>
+                <th>&nbspBirthday&nbsp</th>
+                <th>&nbspMajorId&nbsp</th>
             </tr>
         </table>
     </div>
     <div class="data">
         <h2>是否要添加信息？</h2>
-        <p id="sid">学号（Identity）&nbsp<input type="text" name="sid" placeholder="student's id"><span id="check"></span></p>
+        <p id="sid">学号（Identity）&nbsp<input type="text" name="sid" placeholder="student's id"></p><p id="check" style="font-size:10px;color: springgreen"></p>
         <p>姓名（Name）&nbsp<input type="text" name="sname" placeholder="student's name"></p>
         <p><input type="radio" name="gender" checked value="m">男（Male）&nbsp<input type="radio" name="gender" value="f">女（Female）</p>
         <p>年龄（Age）&nbsp<input type="number" name="age" value=0></p>
-        <p>生日（birthday）&nbsp<input type="date" name="birthday" class="day"></p>
+        <p>生日（Birthday）&nbsp<input type="date" name="birthday" class="day"></p>
         <p id="mname"></p>
         <p><button type="submit" id="change">添加（Add)</button></p>
     </div>
@@ -126,11 +128,12 @@
     })
     document.getElementById("sid").addEventListener("keyup", check);
     function check(){
-            let Sid =$('input[name="sid"]').val();
+            $("#check").text("");
+            let check=$('input[name="sid"]');
+            let Sid =check.val();
             for(let i=0;i<studentID.length;i++){
                 if(studentID[i]===Sid){
-                    alert("学号已存在");
-                    $("#check").innerHTML="学号已存在";
+                    $("#check").text("学号已存在");
                 }
             }
     }

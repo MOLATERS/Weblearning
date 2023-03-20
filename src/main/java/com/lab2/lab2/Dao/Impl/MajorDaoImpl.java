@@ -51,7 +51,6 @@ public class MajorDaoImpl implements MajorDao {
     public Major getByMid(String mid) {
         DBUtil dbutil =new DBUtil();
         ResultSet rs = dbutil.executeQuery("select * from major where mid"+mid+"'");
-        List<Major> majorList=new ArrayList<>();
         String mname;
         try {
             if(rs.next()){

@@ -62,7 +62,6 @@ public class StudentDaoImpl implements StudentDao {
     public Student getById(String sid) {
         DBUtil dbutil =new DBUtil();
         ResultSet rs = dbutil.executeQuery("select * from student where sid = '"+sid+"'");
-        List<Major> majorList=new ArrayList<>();
         String sname;
         String gender;
         int age;

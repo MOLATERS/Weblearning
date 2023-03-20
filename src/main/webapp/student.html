@@ -113,7 +113,6 @@
             datatype: "json",
             data:{action: "init"},
             success: function (data) {
-                student_number=data.length;
                 for (let i = 0; i < data.length; i++) {
                     studentID.push(data[i].sid);
                     var result;
@@ -176,6 +175,21 @@
                 age: Age,
                 birthday: Birthday,
                 mid: Mid
+            },
+            success:function(data){
+                alert("成功提交！");
+                var gender;
+                var date = new Date(data.birthday);
+                var year = date.getFullYear(); // 获取完整的年份 (4位)
+                var month = date.getMonth() + 1; // 获取当前月份 (0-11,0代表1月)
+                var day = date.getDate(); // 获取当前日 (1-31)
+                if (month < 10) month = "0" + month; // 如果月份是个位数，在前面补0
+                if (day < 10) day = "0" + day; // 如果日是个位数，在前面补0
+                if(data.gender==='f') gender='女';
+                else if(data.gender==='m')gender='男';
+                $("#table").append("<tr><td>" + data.sid + "</td><td>" + data.sname +
+                    "</td><td>" + gender + "</td><td>" + data.age +
+                    "</td><td>" + year + "-" + month + "-" + day + "</td><td>" + major_name[data.mid] + "</td></tr>");
             }
             // url: '/student-servlet?action=add'+"&sid="+Sid+"&sname="+Sname+"&gender="+
             //     Gender+"&age="+Age+"&birthday="+Birthday+"&mid="+Mid

@@ -2,6 +2,7 @@ package com.lab2.lab2.Action;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,8 @@ public class StudentServlet extends HttpServlet {
             SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
             if (StudentDao.getById(sid) == null) {
                 try {
-                    StudentDao.add(new Student(sid, sname, gender, Integer.parseInt(age), ft.parse(birthday), mid));
+                    Student new_student=new Student(sid, sname, gender, Integer.parseInt(age), ft.parse(birthday), mid);
+                    out.print(JSON.toJSONString(new_student));
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
